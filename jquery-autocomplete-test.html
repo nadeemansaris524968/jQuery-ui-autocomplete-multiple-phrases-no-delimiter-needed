@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>jQuery Autocomplete Test</title>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+	 crossorigin="anonymous"></script>
+</head>
+
+<body>
+	<div class="ui-widget">
+		<label>Tag programming languages: </label>
+		<textarea id="tags" rows="4" cols="50" contenteditable="true"></textarea>
+	</div>
+	<script>
+
+		$(function () {
+			var availableTags = [
+				"air space opacities",
+				"air space opacity",
+				"air space opacity to",
+				"air space opacity to suggest, and more, and more",
+				"air space opacity to suggest a",
+				"air space opacity to suggest a pneumonia",
+				"air under",
+				"air under the",
+				"air under the diaphragm",
+				"airspace consolidation",
+				"airspace disease",
+				"airspace disease pleural",
+				"airspace disease pleural effusion",
+				"airspace disease pleural effusion or",
+				"airspace disease pleural effusion or pneumothorax",
+				"airspace disease pneumothorax",
+				"airspace disease pneumothorax or",
+				"airspace disease pneumothorax or pleural",
+				"airspace disease pneumothorax or pleural effusion",
+				"airspace opacities",
+				"airspace opacity",
+				"airspace opacity pleural",
+				"airspace opacity pleural effusion",
+				"alveolar consolidation",
+				"alveolar consolidation no",
+				"alveolar consolidation no definite",
+				"alveolar consolidation no definite pleural",
+				"alveolar consolidation no definite pleural effusion",
+				"alveolar consolidation no definite pleural effusion seen",
+				"and cardiomediastinal",
+				"and clear",
+				"and configuration",
+				"and contour",
+				"and expanded",
+				"and hilar",
+				"and hilar contours",
+				"and lateral",
+				"and lateral radiographs",
+				"and lateral radiographs of",
+				"and lateral radiographs of the",
+				"and lateral radiographs of the chest",
+				"and lateral views",
+				"and lateral views of",
+				"and lateral views of the",
+				"and lateral views of the chest",
+				"and lungs",
+				"and lungs have",
+				"and lungs have xxxx",
+				"and lungs have xxxx xxxx",
+				"and lungs have xxxx xxxx in",
+				"and lungs have xxxx xxxx in the",
+				"and lungs have xxxx xxxx in the interval",
+				"and mediastinal",
+				"and mediastinal contour",
+				"and mediastinal contour are",
+				"and mediastinal contours",
+				"and mediastinal contours appear",
+				"and mediastinal contours appear within",
+				"and mediastinal contours appear within normal",
+				"and mediastinal contours appear within normal limits",
+				"and mediastinal contours are",
+				"and mediastinal contours are within",
+				"and mediastinal contours are within normal",
+				"and mediastinal contours are within normal limits",
+				"and mediastinal silhouettes",
+				"and mediastinal silhouettes are",
+				"and mediastinum",
+				"and mediastinum are",
+				"and mediastinum are normal",
+				"and mediastinum are within",
+				"and mediastinum are within normal",
+				"and mediastinum are within normal limits",
+				"and mediastinum normal",
+				"and mediastinum of",
+				"and mediastinum of normal",
+				"and mediastinum of normal size",
+				"and mediastinum of normal size and",
+				"and mediastinum of normal size and contour",
+				"and pleural",
+				"and pleural spaces",
+				"and pleural spaces show",
+				"and pleural spaces show no",
+				"and pleural spaces show no acute",
+				"and pleural spaces show no acute abnormality",
+				"and pulmonary",
+				"and pulmonary vascularity",
+				"and pulmonary vascularity appear",
+			];
+			function split(val) {
+				return val.split(/ \s*/);
+			}
+			function extractLast(term) {
+				return split(term).pop();
+			}
+
+			$("#tags")
+				// don't navigate away from the field on tab when selecting an item
+				.on("keydown", function (event) {
+					if (event.keyCode === $.ui.keyCode.TAB &&
+						$(this).autocomplete("instance").menu.active) {
+						event.preventDefault();
+					}
+					// if (event.keyCode == 188 || event.keyCode == 110) { // thats a comma
+					// 	console.log('Not allowing comma');
+					// 	event.preventDefault();
+					// }
+				})
+				.autocomplete({
+					minLength: 3,
+					source: function (request, response) {
+						// delegate back to autocomplete, but extract the last term
+						response($.ui.autocomplete.filter(
+							availableTags, extractLast(request.term)));
+					},
+					// source: function(request, response) {
+					// 	var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(request.term), "i");
+					// 	response($.grep(availableTags, function (item) {
+					// 		return matcher.test(item);
+					// 	}));
+					// },
+					focus: function () {
+						// prevent value inserted on focus
+						return false;
+					},
+					select: function (event, ui) {
+						// if (this.value === '' || this.value === ' ') {
+						// 	return;
+						// }
+						
+						var terms = split(this.value);
+						// remove the current input
+						terms.pop();
+						// add the selected item
+						terms.push(ui.item.value);
+						// add placeholder to get the comma-and-space at the end
+						terms.push("");
+						this.value = terms.join(" ");
+						this.value = this.value.replace(/ \s*$/,'');
+						// this.value = this.value.replace(/,+/g,",").replace(/(,\s*$)|(^,*)/, "");
+						console.log(this.value);
+						return false;
+					}
+				});
+		});
+	</script>
+</body>
+
+</html>
