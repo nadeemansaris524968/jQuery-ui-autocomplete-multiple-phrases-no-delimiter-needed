@@ -132,8 +132,8 @@
 					minLength: 3,
 					source: function (request, response) {
 						// delegate back to autocomplete, but extract the last term
-						response($.ui.autocomplete.filter(
-							availableTags, extractLast(request.term)));
+						var results = $.ui.autocomplete.filter(availableTags, extractLast(request.term));
+						response(results.slice(0, 10));
 					},
 					// source: function(request, response) {
 					// 	var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(request.term), "i");
@@ -149,7 +149,7 @@
 						// if (this.value === '' || this.value === ' ') {
 						// 	return;
 						// }
-						
+
 						var terms = split(this.value);
 						// remove the current input
 						terms.pop();
@@ -158,7 +158,7 @@
 						// add placeholder to get the comma-and-space at the end
 						terms.push("");
 						this.value = terms.join(" ");
-						this.value = this.value.replace(/ \s*$/,'');
+						this.value = this.value.replace(/ \s*$/, '');
 						// this.value = this.value.replace(/,+/g,",").replace(/(,\s*$)|(^,*)/, "");
 						console.log(this.value);
 						return false;
